@@ -15,12 +15,18 @@ exports.addTests = (suite) ->
     suite.checkOCS "Dependency", "/dependencies", "dependtypes"
     suite.checkOCS "Homepage type", "/homepagetypes", "homepagetypes"
 
+    checkDate = (dateString) ->
+        dateObj = new Date dateString
+        assert.ok dateObj.getTime(), "Date properties need to be proper ISO"
+
     checkContent = (item) ->
         assert.ok item.id, "Content items have IDs"
         assert.ok item.name, "Content items have names"
         assert.ok item.version, "Content items have version numbers"
         assert.ok item.changed, "Content items have a changed date"
+        checkDate item.changed
         assert.ok item.created, "Content items have a creation date"
+        checkDate item.created
         assert.ok item.typeid, "Content items have type IDs"
         assert.ok item.typename, "Content items have type names"
         assert.ok item.personid, "Content items have person IDs"
