@@ -33,4 +33,9 @@ exports.addTests = (suite) ->
     suite.checkOCS("Content item", "/data", "content")
         .verify checkContent
 
+    # TODO: /data?category=1
+    # TODO: /data?category=1x2
+    # TODO: /data/1
+    # TODO: /download/1/1
+
     suite.unpath()
