@@ -1,5 +1,5 @@
 exports.addTests = (suite) ->
-    suite.path "/person"
+    suite.path "/friend"
 
     suite.discuss("Wrong method")
         .path("/activity")
@@ -8,10 +8,8 @@ exports.addTests = (suite) ->
         .undiscuss()
         .unpath()
 
-    suite.checkOCS "Person", "/data", "person", true
+    suite.checkOCS "Received invitations", "/receivedinvitations", "user", true
 
-    suite.checkOCS "Self", "/self", "person", true
-
-    suite.checkOCS "Balance", "/balance", "person", true
+    suite.checkOCS "Send invitations", "/sentinvitations", "user", true
 
     suite.unpath()
