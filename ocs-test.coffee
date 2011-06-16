@@ -9,7 +9,7 @@ providerURL = process.argv.pop()
 getProvider = (providerURL, callback) ->
     uri = url.parse providerURL
     providerRequest =
-        host: uri.host
+        host: uri.hostname
         path: uri.pathname
         port: uri.port ? 80
         method: "GET"
