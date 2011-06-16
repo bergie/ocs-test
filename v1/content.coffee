@@ -3,7 +3,8 @@ xml2js = require "xml2js"
 
 verifyList = (res, key) ->
     assert.equal res.meta.statuscode, 100
-    assert.equal res.data[key].length, res.meta.totalitems
+    if res.meta.totalitems > 0
+        assert.equal res.data[key].length, res.meta.totalitems
 
 exports.addTests = (suite) ->
     suite.path "/content"
@@ -20,7 +21,7 @@ exports.addTests = (suite) ->
             parser.on "end", (result) ->
                 verifyList result, "category"
 
-                if result.data.category.length > 0
+                if result.data.category?.length > 0
                     category = result.data.category[0]
                     assert.ok category.id, "Categories have IDs"
                     assert.ok category.name, "Categories have names"
@@ -52,7 +53,7 @@ exports.addTests = (suite) ->
             parser.on "end", (result) ->
                 verifyList result, "distribution"
 
-                if result.data.distribution.length > 0
+                if result.data.distribution?.length > 0
                     distro = result.data.distribution[0]
                     assert.ok distro.id, "Distributions have IDs"
                     assert.ok distro.name, "Distributions have names"

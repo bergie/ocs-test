@@ -34,7 +34,7 @@ getProvider providerURL, (providerData) ->
 
     ocsURL = url.parse provider.location
     suite = apiEasy.describe "OCS provider #{provider.id} at #{provider.location}"
-    suite.use ocsURL.host, ocsURL.port ? 80
+    suite.use ocsURL.hostname, ocsURL.port ? 80
     suite.root ocsURL.pathname
 
     for service, params of provider.services
