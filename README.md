@@ -11,9 +11,10 @@ The `ocs-test` tool aims to provide a comprehensive set of API tests for verifyi
 
 Check out this Git repository. To run the tests you also need a recent version of [node.js](http://nodejs.org/) and the following [npm](http://npmjs.org/) packages:
 
-* coffee-script
-* api-easy
-* xml2js
+* [coffee-script](http://jashkenas.github.com/coffee-script/)
+* [api-easy](https://github.com/ryankirkman/api-easy)
+* [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js)
+* [vows](http://vowsjs.org/)
 
 ## Running the tests
 
