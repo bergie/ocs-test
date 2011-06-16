@@ -3,6 +3,7 @@ xml2js = require "xml2js"
 url = require "url"
 apiEasy = require "api-easy"
 path = require "path"
+ocstest = require "./OCStest"
 
 providerURL = process.argv.pop()
 
@@ -36,6 +37,10 @@ getProvider providerURL, (providerData) ->
     suite = apiEasy.describe "OCS provider #{provider.id} at #{provider.location}"
     suite.use ocsURL.hostname, ocsURL.port ? 80
     suite.root ocsURL.pathname
+    suite.checkOCS = (name, url, resource) ->
+        test = new ocstest.OCStest name, url, resource
+        test.register suite
+        test
 
     for service, params of provider.services
         ocsVersion = "v#{params['@'].ocsversion.substr(0, 1)}"
