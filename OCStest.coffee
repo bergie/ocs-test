@@ -30,9 +30,9 @@ class OCStest
             .path(@path)
             .get()
             .expect(200)
-            .expect "XML result needs to be in text/xml format", (error, response, body) ->
-                assert.equal response.headers["content-type"], "text/xml"
-            .expect "XML result needs to follow specification", (error, response, body) =>
+            .expect "result needs to be in application/xml format", (error, response, body) ->
+                assert.equal response.headers["content-type"], "application/xml"
+            .expect "result needs to follow specification", (error, response, body) =>
                 unless response.statusCode is 200
                     assert.fail "Nope"
                     return
