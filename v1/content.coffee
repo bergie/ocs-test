@@ -1,8 +1,11 @@
 assert = require "assert"
 xml2js = require "xml2js"
 
-exports.addTests = (suite) ->
+verifyList = (res, key) ->
+    assert.equal res.meta.statuscode, 100
+    assert.equal res.data[key].length, res.meta.totalitems
 
+exports.addTests = (suite) ->
     suite.path "/content"
 
     suite.discuss("List of categories")
@@ -10,10 +13,12 @@ exports.addTests = (suite) ->
         .get()
         .expect(200)
         .expect "Should contain a list", (error, response, body) ->
+            unless response.statusCode is 200
+                assert.fail "Nope"
+                return
             parser = new xml2js.Parser()
             parser.on "end", (result) ->
-                assert.equal result.meta.statuscode, 100
-                assert.equal result.data.category.length, result.meta.totalitems
+                verifyList result, "category"
 
                 if result.data.category.length > 0
                     category = result.data.category[0]
@@ -27,6 +32,14 @@ exports.addTests = (suite) ->
         .path("/licenses")
         .get()
         .expect(200)
+        .expect "Should contain a list", (error, response, body) ->
+            unless response.statusCode is 200
+                assert.fail "Nope"
+                return
+            parser = new xml2js.Parser()
+            parser.on "end", (result) ->
+                verifyList result, "license"
+            parser.parseString body
         .undiscuss()
         .unpath()
 
@@ -37,8 +50,7 @@ exports.addTests = (suite) ->
         .expect "Should contain a list", (error, response, body) ->
             parser = new xml2js.Parser()
             parser.on "end", (result) ->
-                assert.equal result.meta.statuscode, 100
-                assert.equal result.data.distribution.length, result.meta.totalitems
+                verifyList result, "distribution"
 
                 if result.data.distribution.length > 0
                     distro = result.data.distribution[0]
@@ -50,6 +62,28 @@ exports.addTests = (suite) ->
 
     suite.discuss("List of dependencies")
         .path("/dependencies")
+        .get()
+        .expect(200)
+        .expect "Should contain a list", (error, response, body) ->
+            unless response.statusCode is 200
+                assert.fail "Nope"
+                return
+            parser = new xml2js.Parser()
+            parser.on "end", (result) ->
+                verifyList result, "dependency"
+            parser.parseString body
+        .undiscuss()
+        .unpath()
+
+    suite.discuss("List of home page types")
+        .path("/homepagetypes")
+        .get()
+        .expect(200)
+        .undiscuss()
+        .unpath()
+
+    suite.discuss("List of all content items")
+        .path("/data")
         .get()
         .expect(200)
         .undiscuss()
