@@ -9,6 +9,13 @@ verifyList = (res, key) ->
 exports.addTests = (suite) ->
     suite.path "/content"
 
+    suite.discuss("Wrong method")
+        .path("/activity")
+        .get()
+        .expect(404)
+        .undiscuss()
+        .unpath()
+
     suite.discuss("List of categories")
         .path("/categories")
         .get()
