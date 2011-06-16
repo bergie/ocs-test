@@ -2,7 +2,7 @@ assert = require "assert"
 xml2js = require "xml2js"
 
 verifyList = (res, key) ->
-    assert.equal res.meta.statuscode, 100
+    assert.equal res.meta.statuscode, 100, "Statuscode 100 means successful operation"
     if res.meta.totalitems > 0
         assert.equal res.data[key].length, res.meta.totalitems
 
@@ -80,6 +80,14 @@ exports.addTests = (suite) ->
         .path("/homepagetypes")
         .get()
         .expect(200)
+        .expect "Should contain a list", (error, response, body) ->
+            unless response.statusCode is 200
+                assert.fail "Nope"
+                return
+            parser = new xml2js.Parser()
+            parser.on "end", (result) ->
+                verifyList result, "homepagetypes"
+            parser.parseString body
         .undiscuss()
         .unpath()
 
@@ -87,6 +95,14 @@ exports.addTests = (suite) ->
         .path("/data")
         .get()
         .expect(200)
+        .expect "Should contain a list", (error, response, body) ->
+            unless response.statusCode is 200
+                assert.fail "Nope"
+                return
+            parser = new xml2js.Parser()
+            parser.on "end", (result) ->
+                verifyList result, "content"
+            parser.parseString body
         .undiscuss()
         .unpath()
 
