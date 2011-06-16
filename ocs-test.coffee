@@ -48,5 +48,6 @@ getProvider providerURL, (providerData) ->
         serviceTest = require serviceTestFile
         serviceTest.addTests suite
 
-    suite.run()
-#        reporter: require "vows/reporters/spec"
+    suite.run
+        reporter: require "vows/reporters/spec"
+    , (results) ->
