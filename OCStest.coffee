@@ -20,7 +20,11 @@ class OCStest
         assert.ok item.id, "#{@name} resources have IDs"
         assert.ok item.name, "#{@name} resources have names"
 
-    verifyData: (result) =>
+    verifyData: (result, json) =>
+        if json
+            # Muck JSON object to resemble XML object
+            result.meta = result
+
         assert.equal result.meta.statuscode, 100, "Got statuscode #{result.meta.statuscode} instead of expected 100"
         if result.data[@resource]?.length > 0
             @verifyFields result.data[@resource][0]
@@ -40,6 +44,26 @@ class OCStest
                 parser = new xml2js.Parser()
                 parser.on "end", @verifyData
                 parser.parseString body
+            .undiscuss()
+            .unpath()
+
+        suite.discuss("#{@name} JSON")
+            .path("#{@path}?format=json")
+            .get()
+            .expect(200)
+            .expect "result needs to be in application/json format", (error, response, body) ->
+                assert.equal response.headers["content-type"], "application/json"
+            .expect "result needs to follow specification", (error, response, body) =>
+                unless response.statusCode is 200
+                    assert.fail "Nope"
+                    return
+
+                try
+                    data = JSON.parse body
+                catch e
+                    assert.fail "JSON format should be parseable"
+                    return
+                @verifyData data, true
             .undiscuss()
             .unpath()
 
