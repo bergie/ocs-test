@@ -33,9 +33,12 @@ exports.addTests = (suite) ->
     suite.checkOCS("Content item", "/data", "content")
         .verify checkContent
 
+    # Some methods to test that require real information about contents of 
+    # service (category IDs, content IDs etc)
     # TODO: /data?category=1
     # TODO: /data?category=1x2
     # TODO: /data/1
     # TODO: /download/1/1
+    # TODO: /recommendations/1
 
     suite.unpath()

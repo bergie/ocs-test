@@ -37,8 +37,8 @@ getProvider providerURL, (providerData) ->
     suite = apiEasy.describe "OCS provider #{provider.id} at #{provider.location}"
     suite.use ocsURL.hostname, ocsURL.port ? 80
     suite.root ocsURL.pathname
-    suite.checkOCS = (name, url, resource) ->
-        test = new ocstest.OCStest name, url, resource
+    suite.checkOCS = (name, url, resource, requireAuth) ->
+        test = new ocstest.OCStest name, url, resource, requireAuth
         test.register suite
         test
 
@@ -46,12 +46,15 @@ getProvider providerURL, (providerData) ->
         ocsVersion = "v#{params['@'].ocsversion.substr(0, 1)}"
         serviceTestFile = "#{__dirname}/#{ocsVersion}/#{service}.coffee"
 
+        module = suite.discuss service.toUpperCase()
+
         unless path.existsSync serviceTestFile
-            console.log "Skipping tests for #{service} #{ocsVersion} because there are no tests for it"
+            module.undiscuss()
             continue
 
         serviceTest = require serviceTestFile
-        serviceTest.addTests suite
+        serviceTest.addTests module
+        module.undiscuss()
 
     suite.run
         reporter: require "vows/reporters/spec"

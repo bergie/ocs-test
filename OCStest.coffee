@@ -6,8 +6,10 @@ class OCStest
     name: null
     path: null
     resource: null
+    requireAuth: false
 
-    constructor: (@name, @path, @resource) ->
+    constructor: (@name, @path, @resource, requireAuth) ->
+        @requireAuth = requireAuth ? false
 
     # Method for replacing the standard field verifier method with a
     # custom callback
@@ -23,7 +25,7 @@ class OCStest
         if result.data[@resource]?.length > 0
             @verifyFields result.data[@resource][0]
 
-    register: (suite) ->
+    registerAnon: (suite) ->
         suite.discuss(@name)
             .path(@path)
             .get()
@@ -35,6 +37,18 @@ class OCStest
                 parser = new xml2js.Parser()
                 parser.on "end", @verifyData
                 parser.parseString body
+            .undiscuss()
+            .unpath()
+
+    register: (suite) ->
+        unless @requireAuth
+            @registerAnon suite
+            return
+
+        suite.discuss("#{@name} should require authentication")
+            .path(@path)
+            .get()
+            .expect(401)
             .undiscuss()
             .unpath()
 
